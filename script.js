@@ -15,49 +15,64 @@ function updateTotalPrice(amount) {
 cart.addEventListener("click", (event) => {
     if (event.target.classList.contains("remove-btn")) {
         const item = event.target.closest("li")
-        const price = item.querySelector("label");
-        const priceToRemove = parseFloat(price.dataset.price);
-        updateTotalPrice(-priceToRemove);
+        const price = parseFloat(item.dataset.price);
+        updateTotalPrice(-price);
         item.remove()
     }
 })
 
 addProductButton.addEventListener("click", () => {
 
-    const productName = productNameInput.value
+    // Get product name and price
+    const productName = productNameInput.value.trim();
 
-    const productPrice = productPriceInput.value
+    const productPrice = parseFloat(productPriceInput.value);
 
-     // Validate product name
+    // Validate product name
     if (productName === "") {
-        alert("Please enter a product name!");
+
+        alert("Please enter a product name.");
+
         return;
     }
 
     // Validate product price
-    // if (!Number.isFinite(productPrice) || productPrice <= 0) {
-    //     alert("Please enter a valid product price!");
-    //     return;
-    //}
+    if (!Number.isFinite(productPrice) || productPrice < 0.01) {
 
-    const productListItem = document.createElement("li")
-    productListItem.className = "cart-item"
-    productListItem.innerText = productName
+        alert("Please enter a valid product price.");
 
-    const priceLabel = document.createElement("label")
-    priceLabel.innerText = "$" + productPrice
-    priceLabel.setAttribute('data-price', productPrice);
-    productListItem.append(priceLabel)
+        return;
+    }
+
+    // Round the price to two decimal places
+    const price = Number(productPrice.toFixed(2));
+
+    // Create a new list item
+    const li = document.createElement("li");
+
+    li.classList.add("cart-item");
+
+    // Store product price
+    li.dataset.price = price;
+
+    // Create product details
+    const productDetails = document.createElement("span");
+
+    productDetails.textContent = `${productName} - $${price.toFixed(2)}`;
 
     const removeBtn = document.createElement("button")
     removeBtn.classList.add("remove-btn")
     removeBtn.innerText = "Remove"
 
-    productListItem.append(removeBtn)
+    // Append elements to list item
+    li.appendChild(productDetails);
 
-    cart.append(productListItem)
+    li.appendChild(removeBtn);
 
-    const price = parseFloat(productPrice);
+    // Append list item to shopping cart
+    cart.appendChild(li);
+
+    // Update total price
     updateTotalPrice(price);
 
     productNameInput.value = ""
