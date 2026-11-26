@@ -12,14 +12,6 @@ function updateTotalPrice(amount) {
     totalPriceSpan.textContent = totalPrice.toFixed(2);
 }
 
-// Function to remove an item
-function removeItem(event) {
-    const item = event.target.closest('li');
-    const price = parseFloat(item.dataset.price);
-    updateTotalPrice(-price);
-    item.remove();
-}
-
 cart.addEventListener("click", (event) => {
     if (event.target.classList.contains("remove-btn")) {
         const item = event.target.closest("li")
